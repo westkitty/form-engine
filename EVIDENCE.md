@@ -7,7 +7,7 @@ Environment: Debian 13 cloud VM (box), 8 vCPU, 15 GB RAM, **no GPU**. Node 20.19
 | `npx tsc --noEmit` | clean |
 | `npm test` (Vitest 4.1.12) | **35/35 passed** (5 files: core 19, project 4, recon 6, artifacts 2, tablet 4) |
 | `npx playwright test` (fresh production build + `vite preview`, so the service worker and manifest are the shipped ones) | **29/29 passed** (sculpt 11, tablet 8, responsive 5, pwa 2, imagelab 2, bench 1) |
-| Live, after deploy of `16f0c81`: `FORM_E2E_BASE=https://westkitty.github.io/form-engine/ npx playwright test e2e/{sculpt,imagelab,responsive,tablet,pwa}.spec.ts` | **28/28 passed** against the live site (all but bench) |
+| Live, after deploys of `16f0c81` and again of `36e7b12` (manifest id fix): `FORM_E2E_BASE=https://westkitty.github.io/form-engine/ npx playwright test e2e/{sculpt,imagelab,responsive,tablet,pwa}.spec.ts` | **28/28 passed** against the live site both times (all but bench) |
 | `node tools/meshy-proxy.mjs` route guards (fake key, no upstream call) | OPTIONS 204 · unknown route 404 · foreign asset host 400 · CORS origin pinned |
 
 The detailed per-test numbers are in `artifacts/evidence/e2e-results.json`, written by the most recent run.
