@@ -1,0 +1,30 @@
+{
+  "name": "form-engine",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 5180 --strictPort",
+    "build": "tsc --noEmit && vite build",
+    "build:pages": "tsc --noEmit && FORM_BASE=/form-engine/ vite build --outDir dist-pages",
+    "preview": "vite preview --host 127.0.0.1 --port 5181 --strictPort",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "bench": "playwright test e2e/bench.spec.ts --reporter=line"
+  },
+  "dependencies": {
+    "fflate": "^0.8.3",
+    "three": "^0.186.1",
+    "three-mesh-bvh": "^0.9.16"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "@types/node": "^20.19.43",
+    "@types/three": "^0.186.0",
+    "jsdom": "^29.1.1",
+    "typescript": "^6.0.3",
+    "vite": "^8.3.5",
+    "vitest": "^4.1.12"
+  }
+}

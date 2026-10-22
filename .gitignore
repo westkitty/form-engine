@@ -1,0 +1,8 @@
+node_modules
+dist
+dist-pages
+test-results
+playwright-report
+artifacts/tmp
+dbg.mjs
+artifacts/tmp-smoke.png

@@ -1,0 +1,179 @@
+{
+  "boot": {
+    "webgl2": true,
+    "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)"
+  },
+  "_updated": "2026-10-22T01:42:24.837Z",
+  "brushes": {
+    "draw": {
+      "changed": true,
+      "maxDelta": 0.06077724982799736,
+      "hash": "bcb2c5fe"
+    },
+    "inflate": {
+      "changed": true,
+      "maxDelta": 0.04636005504620358,
+      "hash": "17707a46"
+    },
+    "clay": {
+      "changed": true,
+      "maxDelta": 0.03467265873491116,
+      "hash": "5797ad44"
+    },
+    "smooth": {
+      "changed": true,
+      "maxDelta": 0.04046171425467667,
+      "hash": "44fc3165"
+    },
+    "grab": {
+      "changed": true,
+      "maxDelta": 0.09603032509286342,
+      "hash": "ef651a78"
+    },
+    "flatten": {
+      "changed": true,
+      "maxDelta": 0.03645923256609835,
+      "hash": "0bc9687a"
+    },
+    "pinch": {
+      "changed": true,
+      "maxDelta": 0.062421837951278515,
+      "hash": "38d2ae80"
+    },
+    "crease": {
+      "changed": true,
+      "maxDelta": 0.05019612927421571,
+      "hash": "8d19f607"
+    }
+  },
+  "symmetryMask": {
+    "mirrorDisplacementDiff": 8.894239775236734e-9,
+    "maskedVertexMove": 0
+  },
+  "transactions": {
+    "h0": "7b95dcb5",
+    "h1": "0dfb00cd",
+    "h2": "2b86fad4",
+    "cancelExact": true,
+    "undoRedoExact": true
+  },
+  "roundtrip": {
+    "deformFromSphere": 0.08568118150557126,
+    "glbBytes": 1180800,
+    "exportedVsInApp": 0,
+    "reimportVsInApp": 0,
+    "objVsInApp": 0,
+    "stlTriangles": 98304,
+    "stlWeld": {
+      "verts": 25420,
+      "render": 294912,
+      "distinctPositionsInFile": 25425
+    },
+    "reimportedEditable": true
+  },
+  "project": {
+    "bytes": 483735,
+    "parentIsGroup": true,
+    "x": 0.75,
+    "masked": 372,
+    "nodes": 2,
+    "hashPreserved": true
+  },
+  "autosave": {
+    "recoveredLatest": true,
+    "corruptFallback": {
+      "slot": "A",
+      "seq": 1,
+      "fellBack": true,
+      "problems": [
+        "slot B: fingerprint mismatch"
+      ]
+    }
+  },
+  "contextLoss": {
+    "overlayShown": true,
+    "restored": true,
+    "geometryIntact": true,
+    "centreLuma": 155.82,
+    "sculptAfterRestore": true
+  },
+  "inputSimulated": {
+    "note": "SIMULATED via synthetic PointerEvents in headless Chromium; no physical pen/touch hardware",
+    "penLowPressureDelta": 0.013581472239827443,
+    "penFullPressureDelta": 0.06737681016880297,
+    "touchStroke": true,
+    "twoFingerCancels": true
+  },
+  "imageLab": {
+    "invalidTypeRejected": true,
+    "crop": "front: 320×384 — drag on the image to set a crop",
+    "refPlanes": 2,
+    "meshySubmitGatedBy": [
+      "connection configured",
+      "explicit per-job consent"
+    ],
+    "keyNotPersisted": true,
+    "liveMeshyCall": "NOT MADE (no key; requires user approval)"
+  },
+  "mockReconstruction": {
+    "label": "MOCK provider — not real reconstruction",
+    "jobLog": [
+      "draft",
+      "consented",
+      "submitting",
+      "queued",
+      "queued",
+      "running",
+      "downloading",
+      "importing",
+      "ready",
+      "progress"
+    ],
+    "vertexDeltaAfterSculpt": 0.07056332470948946,
+    "exportVsInApp": 0
+  },
+  "layout_1440x900": {
+    "canvas": [
+      1076,
+      856
+    ],
+    "docW": 1440,
+    "winW": 1440,
+    "topOverlap": false,
+    "segRight": 1360,
+    "railVisible": true
+  },
+  "layout_1024x768": {
+    "canvas": [
+      706,
+      724
+    ],
+    "docW": 1024,
+    "winW": 1024,
+    "topOverlap": false,
+    "segRight": 944,
+    "railVisible": true
+  },
+  "layout_768x1024": {
+    "canvas": [
+      768,
+      922
+    ],
+    "docW": 768,
+    "winW": 768,
+    "topOverlap": false,
+    "segRight": 650,
+    "railVisible": true
+  },
+  "layout_390x844": {
+    "canvas": [
+      390,
+      742
+    ],
+    "docW": 390,
+    "winW": 390,
+    "topOverlap": false,
+    "segRight": 284,
+    "railVisible": true
+  }
+}
