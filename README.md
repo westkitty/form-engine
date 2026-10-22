@@ -54,6 +54,6 @@ BVH policy: the BVH is refit once per frame while a stroke is dirty. It's fully 
 
 See [FEATURE_MATRIX.md](FEATURE_MATRIX.md), [EVIDENCE.md](EVIDENCE.md) and [PROJECT_STATE.md](PROJECT_STATE.md). Live image-to-3D is **UNVERIFIED** because no provider key was used. Setup is in [RECONSTRUCTION_SETUP.md](RECONSTRUCTION_SETUP.md).
 
-## Deploying (not published)
+## Deploying
 
-`npm run build:pages` produces a static site for `https://<user>.github.io/form-engine/`. A ready-to-use workflow is in `docs/pages-workflow.yml.example`. It's deliberately **not** in `.github/workflows/`, and publishing needs the owner's approval. Status: **READY-NOT-PUBLISHED**.
+Live at **https://westkitty.github.io/form-engine/**. `.github/workflows/pages.yml` typechecks, runs the unit tests, builds with base `/form-engine/`, and deploys on every push to `main` (Pages source: GitHub Actions).
