@@ -1,30 +1,38 @@
 import { test, expect } from '@playwright/test';
 import { boot, record, EVID } from './helpers';
 
-const VIEWS = [[1440, 900], [1024, 768], [768, 1024], [390, 844]] as const;
-for (const [w, h] of VIEWS) {
-  test(`layout ${w}x${h}: canvas live, no overflow, controls reachable`, async ({ page }) => {
-    await page.setViewportSize({ width: w, height: h });
+// Tab S9 Ultra native (2960x1848 at DPR 1 and as Chrome reports it, 1480x924 @2x), small tablet landscape/portrait, phone.
+const VIEWS = [[2960, 1848, 1], [1480, 924, 2], [1024, 768, 1], [768, 1024, 1], [390, 844, 1]] as const;
+for (const [w, h, dpr] of VIEWS) {
+  test(`layout ${w}x${h}@${dpr}: model first, dock reachable, 44px+ targets, nothing clipped`, async ({ browser }) => {
+    const ctx = await browser.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: dpr, hasTouch: true });
+    const page = await ctx.newPage();
     const errors = await boot(page);
     const m = await page.evaluate(() => {
-      const r = (s: string) => document.querySelector(s)!.getBoundingClientRect();
-      const cv = r('#viewport canvas'); const seg = r('#modes'); const rail = r('#rail');
-      const tops = [...document.querySelectorAll('.topbar > *')].map(e => e.getBoundingClientRect()).filter(b => b.width > 0);
-      let overlap = false; for (let i = 0; i < tops.length; i++) for (let j = i + 1; j < tops.length; j++) { const a = tops[i], b = tops[j]; if (a.left < b.right - 1 && b.left < a.right - 1 && a.top < b.bottom - 1 && b.top < a.bottom - 1) overlap = true; }
-      const clipped = [...document.querySelectorAll('.topbar > *, .seg button')].filter(e => (e as HTMLElement).scrollWidth > (e as HTMLElement).clientWidth + 1).map(e => (e as HTMLElement).className || e.tagName);
-      return { clipped, canvas: [Math.round(cv.width), Math.round(cv.height)], docW: document.documentElement.scrollWidth, winW: innerWidth, topOverlap: overlap, segRight: seg.right, railVisible: rail.width > 0 && rail.height > 0 };
+      const R = (e: Element) => e.getBoundingClientRect();
+      const cv = R(document.querySelector('#viewport canvas')!); const dock = R(document.querySelector('#dock')!);
+      const corners = [...document.querySelectorAll('.bar')].map(R);
+      const hit = (a: DOMRect, b: DOMRect) => a.left < b.right - 1 && b.left < a.right - 1 && a.top < b.bottom - 1 && b.top < a.bottom - 1;
+      const targets = [...document.querySelectorAll('#dock button, .bar button:not([hidden])')].map(e => { const r = R(e); return { id: (e as HTMLElement).dataset.testid, w: Math.round(r.width), h: Math.round(r.height) }; }).filter(t => t.w > 0);
+      const small = targets.filter(t => t.w < 44 || t.h < 44);
+      const clipped = [...document.querySelectorAll('#dock button span, #dock .sl span')].filter(e => (e as HTMLElement).scrollWidth > (e as HTMLElement).clientWidth + 1).map(e => e.textContent);
+      const visiblePanels = [...document.querySelectorAll('#drawer.open, #hud:not([hidden])')].length;
+      return { canvas: [Math.round(cv.width), Math.round(cv.height)], docW: document.documentElement.scrollWidth, winW: innerWidth, dock: [Math.round(dock.left), Math.round(dock.top), Math.round(dock.right), Math.round(dock.bottom)], dockInView: dock.left >= 0 && dock.right <= innerWidth && dock.bottom <= innerHeight, dockHitsCorner: corners.some(c => hit(c, dock)), small, clipped, visiblePanels, dockAreaShare: (dock.width * dock.height) / (innerWidth * innerHeight) };
     });
-    expect(m.canvas[0]).toBeGreaterThan(200); expect(m.canvas[1]).toBeGreaterThan(200);
+    expect(m.canvas[0]).toBe(w); expect(m.canvas[1]).toBe(h);           // the model gets the whole screen
     expect(m.docW).toBeLessThanOrEqual(m.winW);
-    expect(m.topOverlap).toBe(false);
-    expect(m.clipped).toEqual([]);
-    expect(m.segRight).toBeLessThanOrEqual(w);
-    expect(m.railVisible).toBe(true);
+    expect(m.dockInView).toBe(true); expect(m.dockHitsCorner).toBe(false);
+    expect(m.small).toEqual([]); expect(m.clipped).toEqual([]);
+    expect(m.visiblePanels).toBe(0);                                     // no drawer or HUD by default
+    expect(m.dockAreaShare).toBeLessThan(w < 500 ? 0.3 : w < 1100 ? 0.16 : 0.1);
     await page.getByTestId('brush-clay').click();
-    if (w <= 820) { await page.getByTestId('toggle-panel').click(); await page.waitForTimeout(300); }
     await expect(page.getByTestId('radius')).toBeInViewport();
-    await page.screenshot({ path: `${EVID}/layout-${w}x${h}.png` });
+    await page.getByTestId('file-menu').click();
+    await expect(page.getByTestId('act-save')).toBeInViewport();
+    await page.getByTestId('drawer-close').click();
+    await page.screenshot({ path: `${EVID}/layout-${w}x${h}${dpr > 1 ? '@' + dpr + 'x' : ''}.png` });
     expect(errors).toEqual([]);
-    record(`layout_${w}x${h}`, m);
+    record(`layout_${w}x${h}@${dpr}`, m);
+    await ctx.close();
   });
 }

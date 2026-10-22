@@ -1,0 +1,24 @@
+{
+  "id": "./",
+  "name": "FORM//ENGINE — 3D sculpting studio",
+  "short_name": "FORM//ENGINE",
+  "description": "Sculpt real 3D meshes with a pen or finger. Import and export GLB, OBJ and STL. Works offline.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "display_override": ["fullscreen", "standalone"],
+  "orientation": "any",
+  "background_color": "#111214",
+  "theme_color": "#111214",
+  "categories": ["graphics", "design", "productivity"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "screenshots": [
+    { "src": "screenshots/wide.png", "sizes": "1480x924", "type": "image/png", "form_factor": "wide", "label": "Sculpting on a tablet in landscape" },
+    { "src": "screenshots/narrow.png", "sizes": "768x1024", "type": "image/png", "form_factor": "narrow", "label": "Portrait layout with the brush dock" }
+  ]
+}

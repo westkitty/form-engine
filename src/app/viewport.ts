@@ -29,10 +29,17 @@ export class Viewport {
   onFrame: () => void = () => {};
   onContext: (lost: boolean) => void = () => {};
   rendererInfo = '';
+  /** Device-pixel budget for the drawing buffer; DPR is capped so w*h*dpr² stays under it (tablets have huge native panels). */
+  quality: 'balanced' | 'sharp' | 'fast' = 'balanced';
+  pixelRatio = 1;
+  static BUDGET = { fast: 1.6e6, balanced: 3.2e6, sharp: 8.5e6 } as const;
+  static effectiveDpr(cssW: number, cssH: number, dpr: number, budget: number) {
+    const cap = Math.sqrt(budget / Math.max(1, cssW * cssH));
+    return Math.max(1, Math.min(dpr, 3, cap));
+  }
 
   constructor(public host: HTMLElement) {
     this.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance', preserveDrawingBuffer: false });
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     this.renderer.setClearColor(0x111214, 1);
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     const cv = this.renderer.domElement; cv.id = 'viewport-canvas'; cv.setAttribute('aria-label', '3D sculpt viewport'); cv.tabIndex = 0;
@@ -76,6 +83,8 @@ export class Viewport {
     cv.addEventListener('webglcontextrestored', () => { this.contextLost = false; this.contextEvents.push('restored@' + Math.round(performance.now())); this.needsRender = true; this.onContext(false); });
 
     new ResizeObserver(() => this.resize()).observe(host);
+    window.visualViewport?.addEventListener('resize', () => this.resize());
+    matchMedia(`(resolution: ${window.devicePixelRatio}dppx)`).addEventListener?.('change', () => this.resize());
     this.resize();
     const loop = (t: number) => {
       requestAnimationFrame(loop);
@@ -93,8 +102,11 @@ export class Viewport {
     requestAnimationFrame(loop);
   }
 
+  setQuality(q: 'balanced' | 'sharp' | 'fast') { this.quality = q; this.resize(); }
   resize() {
     const w = Math.max(1, this.host.clientWidth), h = Math.max(1, this.host.clientHeight);
+    const pr = Viewport.effectiveDpr(w, h, window.devicePixelRatio || 1, Viewport.BUDGET[this.quality]);
+    if (pr !== this.pixelRatio || this.renderer.getPixelRatio() !== pr) { this.pixelRatio = pr; this.renderer.setPixelRatio(pr); }
     this.renderer.setSize(w, h, false);
     this.renderer.domElement.style.width = '100%'; this.renderer.domElement.style.height = '100%';
     this.camera.aspect = w / h; this.camera.updateProjectionMatrix(); this.needsRender = true;
@@ -113,7 +125,8 @@ export class Viewport {
     const box = new THREE.Box3();
     if (obj) box.setFromObject(obj); if (box.isEmpty()) box.set(new THREE.Vector3(-1, -1, -1), new THREE.Vector3(1, 1, 1));
     const s = box.getBoundingSphere(new THREE.Sphere());
-    const dist = s.radius / Math.sin(THREE.MathUtils.degToRad(this.camera.fov) / 2) * 1.15;
+    const vHalf = THREE.MathUtils.degToRad(this.camera.fov) / 2, hHalf = Math.atan(Math.tan(vHalf) * this.camera.aspect);
+    const dist = s.radius / Math.sin(Math.min(vHalf, hHalf)) * 1.15; // fit both width and height (portrait phones/tablets)
     const dir = this.camera.position.clone().sub(this.controls.target).normalize();
     this.controls.target.copy(s.center); this.camera.position.copy(s.center).addScaledVector(dir, dist);
     this.camera.near = Math.max(0.001, dist / 1000); this.camera.far = dist * 100; this.camera.updateProjectionMatrix();

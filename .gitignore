@@ -6,3 +6,5 @@ playwright-report
 artifacts/tmp
 dbg.mjs
 artifacts/tmp-smoke.png
+dist-e2e
+*.tmp.mjs

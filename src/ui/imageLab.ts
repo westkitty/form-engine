@@ -71,8 +71,8 @@ export class ImageLab {
       const el = document.createElement('div');
       el.className = 'slot' + (d ? ' has' : '') + (this.sel === s ? ' sel' : '');
       el.dataset.testid = `slot-${s}`; el.setAttribute('data-testid', `slot-${s}`); el.tabIndex = 0;
-      el.innerHTML = `<span class="tag">${s}${s === 'front' ? ' · req' : ''}</span>${d ? '' : 'drop / choose'}`;
-      if (d) { el.style.backgroundImage = `url(${d.dataUrl})`; const x = document.createElement('button'); x.className = 'x'; x.textContent = '×'; x.title = 'Remove'; x.onclick = ev => { ev.stopPropagation(); delete this.slots[s]; if (this.sel === s) this.sel = null; this.renderSlots(); this.drawCrop(); this.refreshSubmit(); }; el.appendChild(x); }
+      el.innerHTML = `<span class="tag">${s}${s === 'front' ? ' · req' : ''}</span>${d ? '' : 'Tap to add'}`;
+      if (d) { el.style.backgroundImage = `url(${d.dataUrl})`; const x = document.createElement('button'); x.className = 'x'; x.textContent = '×'; x.title = 'Remove'; x.setAttribute('aria-label', 'Remove ' + s + ' image'); x.onclick = ev => { ev.stopPropagation(); delete this.slots[s]; if (this.sel === s) this.sel = null; this.renderSlots(); this.drawCrop(); this.refreshSubmit(); }; el.appendChild(x); }
       el.onclick = () => { if (d) this.select(s); else { this.targetSlot = s; $('file-image').click(); } };
       el.ondragover = ev => ev.preventDefault();
       el.ondrop = async ev => { ev.preventDefault(); const f = ev.dataTransfer?.files?.[0]; if (f) await this.intake(s, f.name, f.type, new Uint8Array(await f.arrayBuffer())); };

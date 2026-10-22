@@ -1,19 +1,46 @@
-# EVIDENCE — 2026-10-21 (America/Detroit)
+# EVIDENCE — 0.2.0, 2026-10-22 (America/Detroit)
 
-Environment: Debian 13 cloud VM (box), 8 vCPU, 15 GB RAM, **no GPU**. Node 20.19.2, npm 11.21. Headless Chrome 155.0.8059.84 through Playwright 1.64.1. WebGL2 runs on ANGLE → Vulkan → **SwiftShader** (software).
-
-## Commands and results
+Environment: Debian 13 cloud VM (box), 8 vCPU, 15 GB RAM, **no GPU**. Node 20.19.2, npm 11.21. Headless Chrome 155.0.8059.84 through Playwright 1.64.1. WebGL2 runs on ANGLE → Vulkan → **SwiftShader** (softw## Commands and results
 
 | Command | Result |
 |---|---|
 | `npx tsc --noEmit` | clean |
-| `npm test` (Vitest 4.1.12) | **31/31 passed** (4 files: core 19, project 4, recon 6, artifacts 2) |
-| `npx playwright test` (dev server) | **18/18 passed** (sculpt 11, imagelab 2, responsive 4, bench 1) |
-| `FORM_E2E_BASE=http://127.0.0.1:5181 npx playwright test e2e/sculpt.spec.ts e2e/imagelab.spec.ts e2e/responsive.spec.ts` (production `vite preview`) | **17/17 passed** |
-| Pages profile served at `/form-engine/`: `-g "boots\|GLB export"` | **2/2 passed** |
+| `npm test` (Vitest 4.1.12) | **35/35 passed** (5 files: core 19, project 4, recon 6, artifacts 2, tablet 4) |
+| `npx playwright test` (fresh production build + `vite preview`, so the service worker and manifest are the shipped ones) | **29/29 passed** (sculpt 11, tablet 8, responsive 5, pwa 2, imagelab 2, bench 1) |
+| Live, after deploy: `FORM_E2E_BASE=https://westkitty.github.io/form-engine/ npx playwright test` (all but bench) | see "Live verification" below |
 | `node tools/meshy-proxy.mjs` route guards (fake key, no upstream call) | OPTIONS 204 · unknown route 404 · foreign asset host 400 · CORS origin pinned |
 
 The detailed per-test numbers are in `artifacts/evidence/e2e-results.json`, written by the most recent run.
+
+## Tablet, S Pen and app checks (0.2.0)
+
+All pen and touch input is **SIMULATED**. It's injected through Chrome DevTools Protocol (`Input.dispatchMouseEvent` with `pointerType:"pen"` and pressure/tilt/twist, and `Input.dispatchTouchEvent`), so it arrives as trusted PointerEvents. The eraser case uses a synthetic `PointerEvent`, because CDP can't send button 5. No physical Galaxy Tab S9 Ultra, S Pen or Samsung Internet was available.
+
+| Check | Measured |
+|---|---|
+| Pen pressure | 0.15 → max Δ 0.0083, 1.0 → 0.0550 |
+| Tilt (55°/25°) vs upright | 1,499 vs 794 vertices changed (radius ×1.56) |
+| Twist | read as 90°; shown in Settings › Pen and touch |
+| Hover | cursor visible, mesh unchanged |
+| Palm rejection | touch right after the pen was rejected (no sculpt, camera unchanged). Once the pen had left, one finger orbited and still didn't sculpt |
+| Side button | carves inward (radial sum < 0) vs a normal stroke building outward. The Smooth setting switches the brush |
+| Two-finger gesture | camera moved, mesh hash unchanged |
+| Canvas lock | `touch-action:none` on the canvas only, `overscroll-behavior:none`, contextmenu prevented |
+| Pixel ratio | 1480×924 @ DPR 2 → 1.53 (2263×1413 buffer, under the 3.2 MP budget); Sharp → 2 |
+| Manifest | Chrome `Page.getAppManifest` has no errors. display fullscreen, display_override [fullscreen, standalone], orientation any, maskable 192/512, wide + narrow screenshots |
+| Installability | Chrome `Page.getInstallabilityErrors` → **[]** (persistent profile; incognito contexts always report `in-incognito`) |
+| Offline | service worker controls the page. With the network blocked, a reload boots the studio from cache |
+| Install button | shown on `beforeinstallprompt` (SIMULATED event), and `prompt()` is called |
+| Full screen | Fullscreen API enter/exit via the corner button. Auto full screen fired on the first touch tap when enabled |
+
+Not provable here:
+
+- An actual "Add to Home screen" on the tablet
+- Samsung Internet's install flow
+- S Pen hardware event quirks (for example, whether hover-exit events are sent; the code times hover out after 1.5 s)
+- Real-GPU frame rate on the Adreno 740
+
+ run.
 
 ## Key measured facts
 
@@ -33,12 +60,14 @@ The frame times above are bound by CPU rasterisation in SwiftShader, so they're 
 
 ## Screenshots (supporting only)
 
-They're in `artifacts/evidence/`: `sculpt-crease-1440.png`, `layout-{1440x900,1024x768,768x1024,390x844}.png`, `imagelab-dialog.png`, `imagelab-refplanes.png` and `context-restored.png`.
+- Before/after the redesign, same strokes: `artifacts/evidence/ux/before-*.png` and `after-*.png` at 2960×1848, 1480×924@2x, 1024×768, 768×1024 and 390×844. Plus `after-1480x924@2x-menu.png`, `after-1480x924@2x-settings.png` and `after-768x1024-more.png`.
+- From the tests: `layout-*.png`, `imagelab-dialog.png`, `imagelab-refplanes.png`, `context-restored.png` and `sculpt-crease-1440.png`.
+- The design critique is `docs/design-critiques/2026-10-21-studio-v0.1.md`.
 
 ## Not proven
 
 - Live Meshy job: no key, no account was created, and no paid call was made.
-- Physical pen and touch hardware.
+- Physical pen and touch hardware (Galaxy Tab S9 Ultra, S Pen), Samsung Internet, and a real home-screen install.
 - Real-GPU performance.
 - `.gltf` with external resources.
 - Gizmo drag automation (numeric transform editing is proven).

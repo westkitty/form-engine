@@ -2,75 +2,123 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
 <meta name="theme-color" content="#111214" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<link rel="manifest" href="./manifest.webmanifest" />
+<link rel="apple-touch-icon" href="./icons/icon-192.png" />
 <meta name="description" content="FORM//ENGINE — browser 3D sculpting studio. Vertex-level sculpting, GLB/OBJ/STL import and export, native projects." />
 <title>FORM//ENGINE</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23111214'/%3E%3Cpath d='M6 26V6h14M6 16h10' stroke='%23e2a03f' stroke-width='3' fill='none'/%3E%3Ccircle cx='24' cy='22' r='4' fill='none' stroke='%23d8d5ce' stroke-width='2'/%3E%3C/svg%3E" />
 </head>
 <body>
 <div id="app" class="app">
-  <header class="topbar">
+  <div id="viewport"></div>
+
+  <header class="bar bar-l">
+    <button class="fab" data-act="drawer" data-testid="file-menu" aria-controls="drawer" aria-expanded="false" aria-label="Menu" title="Menu">
+      <svg viewBox="0 0 20 20"><path d="M3 6h14M3 10h14M3 14h14"/></svg></button>
     <div class="brand" aria-label="FORM//ENGINE"><span class="b1">FORM</span><span class="b2">//</span><span class="b1">ENGINE</span></div>
-    <div class="menu" id="file-menu">
-      <button class="tb" data-testid="file-menu" aria-haspopup="true" aria-expanded="false">File</button>
-      <div class="dropdown" role="menu">
-        <button data-act="new" data-testid="act-new">New sculpt<span class="k">sphere</span></button>
-        <button data-act="open" data-testid="act-open">Open project…<span class="k">.formengine</span></button>
-        <button data-act="save" data-testid="act-save">Save project<span class="k">Ctrl S</span></button>
-        <hr />
-        <button data-act="import" data-testid="act-import">Import model…<span class="k">GLB OBJ STL</span></button>
-        <hr />
-        <button data-act="export-glb" data-testid="act-export-glb">Export GLB<span class="k">scene</span></button>
-        <button data-act="export-obj" data-testid="act-export-obj">Export OBJ<span class="k">scene</span></button>
-        <button data-act="export-stl" data-testid="act-export-stl">Export STL<span class="k">scene</span></button>
-        <button data-act="export-sel-glb" data-testid="act-export-sel-glb">Export selection GLB</button>
-      </div>
-    </div>
-    <button class="tb" data-act="imagelab" data-testid="open-imagelab">Image Lab</button>
-    <div class="spacer"></div>
-    <div class="seg" role="radiogroup" aria-label="Mode" id="modes">
-      <button data-mode="sculpt" class="on" data-testid="mode-sculpt" data-short="SCU" title="Sculpt (S)">Sculpt</button>
-      <button data-mode="translate" data-testid="mode-translate" data-short="MOV" title="Move (W)">Move</button>
-      <button data-mode="rotate" data-testid="mode-rotate" data-short="ROT" title="Rotate (E)">Rotate</button>
-      <button data-mode="scale" data-testid="mode-scale" data-short="SCA" title="Scale (R)">Scale</button>
-    </div>
-    <div class="hist">
-      <button class="tb icon" data-act="undo" data-testid="undo" title="Undo (Ctrl Z)" aria-label="Undo"><svg viewBox="0 0 20 20"><path d="M7 5 3 9l4 4M3.5 9H12a5 5 0 0 1 0 10h-2" /></svg></button>
-      <button class="tb icon" data-act="redo" data-testid="redo" title="Redo (Ctrl Shift Z)" aria-label="Redo"><svg viewBox="0 0 20 20"><path d="m13 5 4 4-4 4M16.5 9H8a5 5 0 0 0 0 10h2" /></svg></button>
-    </div>
-    <button class="tb icon only-compact" data-act="panel" data-testid="toggle-panel" aria-label="Panels"><svg viewBox="0 0 20 20"><path d="M3 5h14M3 10h14M3 15h14" /></svg></button>
+  </header>
+  <header class="bar bar-r">
+    <button class="fab pill" data-act="install" data-testid="install" hidden title="Install as an app">
+      <svg viewBox="0 0 20 20"><path d="M10 3v10M6 9l4 4 4-4M4 16h12"/></svg><span>Install</span></button>
+    <button class="fab" data-act="fullscreen" data-testid="fullscreen" aria-pressed="false" aria-label="Full screen" title="Full screen">
+      <svg viewBox="0 0 20 20" class="fs-in"><path d="M3 8V3h5M12 3h5v5M17 12v5h-5M8 17H3v-5"/></svg>
+      <svg viewBox="0 0 20 20" class="fs-out"><path d="M8 3v5H3M17 8h-5V3M12 17v-5h5M3 12h5v5"/></svg></button>
   </header>
 
-  <nav class="rail" id="rail" aria-label="Brushes"></nav>
+  <div class="modechip" id="modechip" hidden><span id="modechip-t"></span><button class="tb" data-act="mode-done" data-testid="mode-done">Done</button></div>
 
-  <main class="stage">
-    <div id="viewport"></div>
-    <div class="hud" id="hud" data-testid="hud" aria-live="off"></div>
-    <div class="status" id="status" role="status" aria-live="polite"></div>
-    <div class="banner" id="banner" hidden></div>
-    <div class="ctxlost" id="ctxlost" hidden><div><b>GPU context lost</b><span>Geometry is held on the CPU and is safe. Waiting for the browser to restore WebGL…</span></div></div>
-  </main>
+  <nav class="dock" id="dock" aria-label="Brush">
+    <div class="dgrp brushes" id="brushes" role="toolbar" aria-label="Brushes"></div>
+    <div class="dgrp sliders">
+      <label class="sl"><span>Size <output id="radius-o"></output></span><input type="range" id="radius" min="6" max="300" step="1" data-testid="radius" /></label>
+      <label class="sl"><span>Strength <output id="strength-o"></output></span><input type="range" id="strength" min="0.01" max="1" step="0.01" data-testid="strength" /></label>
+    </div>
+    <div class="dgrp toggles">
+      <button class="dbtn" id="sym-x" data-axis="x" data-testid="sym-x" aria-pressed="false" title="Mirror left–right"><svg viewBox="0 0 20 20"><path d="M10 2v16M7 6 3 10l4 4M13 6l4 4-4 4"/></svg><span>Mirror</span></button>
+      <button class="dbtn" id="invert" data-testid="invert" aria-pressed="false" title="Subtract instead of add"><svg viewBox="0 0 20 20"><path d="M4 10h12"/></svg><span>Subtract</span></button>
+    </div>
+    <div class="dgrp hist">
+      <button class="dbtn" data-act="undo" data-testid="undo" aria-label="Undo" title="Undo"><svg viewBox="0 0 20 20"><path d="M7 5 3 9l4 4M3.5 9H12a5 5 0 0 1 0 10h-2" /></svg><span>Undo</span></button>
+      <button class="dbtn" data-act="redo" data-testid="redo" aria-label="Redo" title="Redo"><svg viewBox="0 0 20 20"><path d="m13 5 4 4-4 4M16.5 9H8a5 5 0 0 0 0 10h2" /></svg><span>Redo</span></button>
+    </div>
+  </nav>
+  <div class="pop" id="more-pop" role="menu" aria-label="More brushes" hidden>
+    <div class="pop-brushes" id="more-brushes"></div>
+    <div class="pop-row"><span>Mask</span><button class="tb" data-act="mask-clear" data-testid="mask-clear">Clear</button><button class="tb" data-act="mask-invert" data-testid="mask-invert">Invert</button></div>
+  </div>
 
-  <aside class="panel" id="panel" aria-label="Inspector">
-    <section class="sec" id="sec-brush">
-      <h2>Brush <span id="brush-name" class="v"></span></h2>
-      <label class="row"><span>Radius</span><input type="range" id="radius" min="6" max="300" step="1" data-testid="radius" /><output id="radius-o"></output></label>
-      <label class="row"><span>Strength</span><input type="range" id="strength" min="0.01" max="1" step="0.01" data-testid="strength" /><output id="strength-o"></output></label>
-      <div class="row"><span>Symmetry</span><div class="chips" id="sym">
-        <button data-axis="x" data-testid="sym-x">X</button><button data-axis="y" data-testid="sym-y">Y</button><button data-axis="z" data-testid="sym-z">Z</button></div></div>
-      <div class="row"><span>Invert</span><div class="chips"><button id="invert" data-testid="invert" title="Ctrl/Cmd while stroking">Ctrl</button><button id="pressure" data-testid="pressure" title="Pen pressure scales strength">Pressure</button></div></div>
-      <div class="row"><span>Mask</span><div class="chips"><button data-act="mask-clear" data-testid="mask-clear">Clear</button><button data-act="mask-invert" data-testid="mask-invert">Invert</button></div></div>
-      <p class="hint" id="brush-hint"></p>
+  <div class="hud" id="hud" data-testid="hud" aria-live="off" hidden></div>
+  <div class="status" id="status" role="status" aria-live="polite"></div>
+  <div class="banner" id="banner" hidden></div>
+  <div class="ctxlost" id="ctxlost" hidden><div><b>Graphics paused</b><span>The browser reset the GPU. Your sculpt is safe in memory and comes back on its own in a moment.</span></div></div>
+
+  <div class="scrim" id="scrim" data-act="drawer-close" hidden></div>
+  <aside class="drawer" id="drawer" aria-label="Menu" aria-hidden="true" inert>
+    <div class="dhead">
+      <div class="tabs" role="tablist">
+        <button role="tab" data-tab="file" data-testid="tab-file" aria-selected="true">File</button>
+        <button role="tab" data-tab="scene" data-testid="tab-scene" aria-selected="false">Scene</button>
+        <button role="tab" data-tab="settings" data-testid="tab-settings" aria-selected="false">Settings</button>
+      </div>
+      <button class="fab ghost" data-act="drawer-close" data-testid="drawer-close" aria-label="Close menu"><svg viewBox="0 0 20 20"><path d="M5 5l10 10M15 5 5 15"/></svg></button>
+    </div>
+
+    <section class="tabp" data-panel="file">
+      <h3>Project</h3>
+      <button class="item" data-act="new" data-testid="act-new">New sculpt<span class="k">fresh sphere</span></button>
+      <button class="item" data-act="open" data-testid="act-open">Open project…<span class="k">.formengine</span></button>
+      <button class="item" data-act="save" data-testid="act-save">Save project<span class="k">.formengine</span></button>
+      <h3>Models</h3>
+      <button class="item" data-act="import" data-testid="act-import">Import model…<span class="k">GLB · OBJ · STL</span></button>
+      <button class="item" data-act="export-glb" data-testid="act-export-glb">Export GLB<span class="k">whole scene</span></button>
+      <button class="item" data-act="export-obj" data-testid="act-export-obj">Export OBJ<span class="k">whole scene</span></button>
+      <button class="item" data-act="export-stl" data-testid="act-export-stl">Export STL<span class="k">for printing</span></button>
+      <button class="item" data-act="export-sel-glb" data-testid="act-export-sel-glb">Export selected as GLB</button>
+      <h3>Reference</h3>
+      <button class="item" data-act="imagelab" data-testid="open-imagelab">Image Lab…<span class="k">photos → planes or 3D</span></button>
     </section>
-    <section class="sec grow" id="sec-scene">
-      <h2>Scene <span class="v" id="scene-count"></span>
-        <span class="acts"><button data-act="add-sphere" data-testid="add-sphere" title="Add sphere">+ Sphere</button><button data-act="add-group" data-testid="add-group" title="Add group">+ Group</button></span></h2>
+
+    <section class="tabp" data-panel="scene" hidden>
+      <h3>Tool</h3>
+      <div class="seg" role="radiogroup" aria-label="Tool" id="modes">
+        <button data-mode="sculpt" class="on" data-testid="mode-sculpt" role="radio">Sculpt</button>
+        <button data-mode="translate" data-testid="mode-translate" role="radio">Move</button>
+        <button data-mode="rotate" data-testid="mode-rotate" role="radio">Rotate</button>
+        <button data-mode="scale" data-testid="mode-scale" role="radio">Scale</button>
+      </div>
+      <h3>Objects <span class="v" id="scene-count"></span>
+        <span class="acts"><button class="tb" data-act="add-sphere" data-testid="add-sphere">Add sphere</button><button class="tb" data-act="add-group" data-testid="add-group">Add group</button></span></h3>
       <ul class="tree" id="tree" role="tree" data-testid="tree"></ul>
-    </section>
-    <section class="sec" id="sec-inspect">
-      <h2>Inspector <span class="v" id="sel-kind"></span></h2>
+      <h3>Selected <span class="v" id="sel-kind"></span></h3>
       <div id="inspector"></div>
+    </section>
+
+    <section class="tabp" data-panel="settings" hidden>
+      <h3>Pen and touch</h3>
+      <label class="row"><span>Sculpt with</span><select id="set-penmode" data-testid="set-penmode">
+        <option value="auto">Auto — pen once detected</option><option value="pen">Pen only</option><option value="any">Pen or finger</option></select></label>
+      <label class="row"><span>Side button</span><select id="set-barrel" data-testid="set-barrel"><option value="invert">Subtract</option><option value="smooth">Smooth</option></select></label>
+      <label class="row"><span>Eraser end</span><select id="set-eraser" data-testid="set-eraser"><option value="mask">Paint mask</option><option value="unmask">Erase mask</option></select></label>
+      <label class="check"><input type="checkbox" id="pressure" data-testid="pressure" /><span>Pressure changes strength</span></label>
+      <label class="check"><input type="checkbox" id="set-psize" data-testid="set-psize" /><span>Pressure changes size</span></label>
+      <label class="check"><input type="checkbox" id="set-tilt" data-testid="set-tilt" /><span>Tilting the pen widens the brush</span></label>
+      <p class="hint" id="pen-readout" data-testid="pen-readout">No pen detected yet.</p>
+      <h3>Brush</h3>
+      <div class="row"><span>Mirror axes</span><div class="chips" id="sym">
+        <button class="tb" data-axis="x" data-testid="sym-x2" aria-pressed="false">X</button><button class="tb" data-axis="y" data-testid="sym-y" aria-pressed="false">Y</button><button class="tb" data-axis="z" data-testid="sym-z" aria-pressed="false">Z</button></div></div>
+      <h3>Display</h3>
+      <label class="check"><input type="checkbox" id="set-autofs" data-testid="set-autofs" /><span>Go full screen on first touch</span></label>
+      <label class="check"><input type="checkbox" id="set-hud" data-testid="set-hud" /><span>Show performance readout</span></label>
+      <label class="row"><span>Render quality</span><select id="set-quality" data-testid="set-quality"><option value="balanced">Balanced</option><option value="sharp">Sharp (slower)</option><option value="fast">Fast</option></select></label>
+      <h3>App</h3>
+      <button class="item" data-act="install" data-testid="install2">Install FORM//ENGINE<span class="k" id="install-state"></span></button>
+      <p class="hint" id="install-hint" data-testid="install-hint"></p>
+      <p class="hint v" id="app-version"></p>
     </section>
   </aside>
 </div>
@@ -94,7 +142,7 @@
       <div id="provider-cfg"></div>
       <label class="row"><span>Target polys</span><input type="number" id="polys" value="30000" min="100" max="300000" step="100" /></label>
       <label class="consent"><input type="checkbox" id="consent" data-testid="consent" /><span id="consent-text"></span></label>
-      <button class="tb wide accent" id="submit-recon" data-testid="submit-recon" disabled>Generate editable mesh</button>
+      <button class="tb wide accent" id="submit-recon" data-testid="submit-recon" disabled>Generate 3D model</button>
       <button class="tb wide" id="cancel-recon" data-testid="cancel-recon" hidden>Cancel job</button>
       <ol class="joblog" id="joblog" data-testid="joblog"></ol>
     </div>

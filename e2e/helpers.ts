@@ -20,6 +20,7 @@ export async function screenOf(page: Page, p: [number, number, number]) { return
 
 /** Real mouse stroke across the selected mesh, between two mesh-local surface points. */
 export async function stroke(page: Page, a: [number, number, number], b: [number, number, number], opts: { steps?: number; modifiers?: ('Shift' | 'Control')[] } = {}) {
+  await closeDrawer(page);
   const A = await screenOf(page, a), B = await screenOf(page, b);
   for (const m of opts.modifiers ?? []) await page.keyboard.down(m);
   await page.mouse.move(A.x, A.y); await page.mouse.down();
@@ -33,7 +34,27 @@ export function maxDelta(a: ArrayLike<number>, b: ArrayLike<number>) {
   expect(a.length).toBe(b.length);
   let m = 0; for (let i = 0; i < a.length; i += 3) m = Math.max(m, Math.hypot(a[i] - b[i], a[i + 1] - b[i + 1], a[i + 2] - b[i + 2])); return m;
 }
-export async function menu(page: Page, testid: string) { await page.getByTestId('file-menu').click(); await page.getByTestId(testid).click(); }
+/** Where each control lives in the progressive-disclosure UI: the More popover or a drawer tab. */
+const WHERE: [RegExp, 'more' | 'file' | 'scene' | 'settings'][] = [
+  [/^(brush-(inflate|flatten|pinch|mask)|mask-(clear|invert))$/, 'more'],
+  [/^(act-|open-imagelab)/, 'file'],
+  [/^(add-|mode-(sculpt|translate|rotate|scale)|i-|tree|node-)/, 'scene'],
+  [/^(sym-[yz]|sym-x2|set-|pressure|install2|pen-readout|install-hint)/, 'settings'],
+];
+export async function drawer(page: Page, tab: 'file' | 'scene' | 'settings') {
+  if (!(await page.locator('#drawer.open').count())) await page.getByTestId('file-menu').click();
+  await page.getByTestId('tab-' + tab).click();
+}
+export async function closeDrawer(page: Page) { if (await page.locator('#drawer.open').count()) await page.getByTestId('drawer-close').click(); }
+export async function reveal(page: Page, testid: string) {
+  const w = WHERE.find(([re]) => re.test(testid))?.[1];
+  if (!w) { if (!testid.startsWith('drawer') && !testid.startsWith('tab-')) await closeDrawer(page); return; } // dock/corner controls: the menu is modal
+  if (w === 'more') { if (!(await page.getByTestId(testid).isVisible())) { await closeDrawer(page); await page.getByTestId('brush-more').click(); } }
+  else await drawer(page, w);
+}
+/** Click a control the way a user would reach it (opening the More popover or the right drawer tab first). */
+export async function tap(page: Page, testid: string) { await reveal(page, testid); await page.getByTestId(testid).click(); }
+export const menu = tap;
 export async function saveDownload(page: Page, testid: string, name: string) {
   const [dl] = await Promise.all([page.waitForEvent('download'), menu(page, testid)]);
   const out = path.join(EVID, name); await dl.saveAs(out); return out;

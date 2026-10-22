@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
-import { boot, hash, positions, stroke, maxDelta, saveDownload, record, EVID } from './helpers';
+import { boot, hash, positions, stroke, maxDelta, saveDownload, record, EVID, tap, drawer, closeDrawer } from './helpers';
 import { readGlb, readBinaryStl, readObjVertices } from '../src/io/verify-readers';
 
 test.describe.configure({ mode: 'serial' });
@@ -21,8 +21,8 @@ test('every brush deforms real vertices through real pointer strokes, each diffe
   for (const t of tools) {
     await page.getByTestId('act-new').evaluate(el => (el as HTMLElement).click());
     const before = await positions(page);
-    if (t === 'smooth' || t === 'flatten') { await page.getByTestId('brush-draw').click(); await stroke(page, [0.1, 0.4, 0.91], [0.3, 0.3, 0.9]); }
-    await page.getByTestId(`brush-${t}`).click();
+    if (t === 'smooth' || t === 'flatten') { await tap(page, 'brush-draw'); await stroke(page, [0.1, 0.4, 0.91], [0.3, 0.3, 0.9]); }
+    await tap(page, `brush-${t}`);
     const mid = await positions(page);
     await stroke(page, [0.0, 0.35, 0.94], [0.35, 0.3, 0.89], { steps: 20 });
     const after = await positions(page);
@@ -36,7 +36,7 @@ test('every brush deforms real vertices through real pointer strokes, each diffe
 
 test('X symmetry mirrors a real stroke; mask freezes vertices', async ({ page }) => {
   await boot(page);
-  await page.getByTestId('brush-draw').click();
+  await tap(page, 'brush-draw');
   const p0 = await positions(page);
   await stroke(page, [0.45, 0.3, 0.84], [0.5, 0.1, 0.86]);
   const p1 = await positions(page);
@@ -49,16 +49,16 @@ test('X symmetry mirrors a real stroke; mask freezes vertices', async ({ page })
   expect(res.di).toBeGreaterThan(1e-3);
   expect(Math.abs(res.di - res.dj)).toBeLessThan(1e-4);
   expect(Math.abs(res.mirrorX)).toBeLessThan(1e-4);
-  await page.getByTestId('sym-x').click(); // symmetry off
-  await page.getByTestId('brush-mask').click();
+  await tap(page, 'sym-x'); // symmetry off
+  await tap(page, 'brush-mask');
   for (let k = 0; k < 3; k++) await stroke(page, [-0.1, -0.3, 0.95], [0.1, -0.3, 0.95]);
   const m0 = await positions(page);
-  await page.getByTestId('brush-draw').click();
+  await tap(page, 'brush-draw');
   await stroke(page, [-0.1, -0.3, 0.95], [0.1, -0.3, 0.95]);
   const m1 = await positions(page);
   const frozen = await page.evaluate(([a, b]) => { let bi = 0, bd = 1e9; for (let i = 0; i < a.length; i += 3) { const d = Math.hypot(a[i] - 0, a[i + 1] + 0.3, a[i + 2] - 0.95); if (d < bd) { bd = d; bi = i; } } return Math.hypot(b[bi] - a[bi], b[bi + 1] - a[bi + 1], b[bi + 2] - a[bi + 2]); }, [m0, m1]);
   expect(frozen).toBeLessThan(1e-4);
-  await page.getByTestId('mask-clear').click();
+  await tap(page, 'mask-clear');
   await stroke(page, [-0.1, -0.3, 0.95], [0.1, -0.3, 0.95]);
   expect(maxDelta(m1, await positions(page))).toBeGreaterThan(1e-3);
   record('symmetryMask', { mirrorDisplacementDiff: Math.abs(res.di - res.dj), maskedVertexMove: frozen });
@@ -75,20 +75,20 @@ test('Esc cancels a live stroke exactly; undo/redo are byte-exact', async ({ pag
   await page.mouse.up();
   expect(await hash(page)).toBe(h0);
   await stroke(page, [0, 0.3, 0.95], [0.3, 0.3, 0.9]); const h1 = await hash(page);
-  await page.getByTestId('brush-inflate').click();
+  await tap(page, 'brush-inflate');
   await stroke(page, [0, -0.2, 0.97], [0.2, -0.2, 0.95]); const h2 = await hash(page);
-  await page.getByTestId('undo').click(); expect(await hash(page)).toBe(h1);
+  await tap(page, 'undo'); expect(await hash(page)).toBe(h1);
   await page.keyboard.press('Control+z'); expect(await hash(page)).toBe(h0);
-  await page.getByTestId('redo').click(); await page.keyboard.press('Control+Shift+z'); expect(await hash(page)).toBe(h2);
+  await tap(page, 'redo'); await page.keyboard.press('Control+Shift+z'); expect(await hash(page)).toBe(h2);
   record('transactions', { h0, h1, h2, cancelExact: true, undoRedoExact: true });
 });
 
 test('GLB export → independent parse → re-import → still editable (maxPositionDelta proof)', async ({ page }) => {
   await boot(page);
   const orig = await positions(page);
-  await page.getByTestId('brush-draw').click();
+  await tap(page, 'brush-draw');
   await stroke(page, [-0.2, 0.4, 0.89], [0.3, 0.35, 0.88]);
-  await page.getByTestId('brush-crease').click();
+  await tap(page, 'brush-crease');
   await stroke(page, [-0.3, -0.1, 0.95], [0.3, -0.1, 0.95]);
   const sculpted = await positions(page);
   const deform = maxDelta(orig, sculpted);
@@ -105,7 +105,7 @@ test('GLB export → independent parse → re-import → still editable (maxPosi
   const reimportDelta = maxDelta(sculpted, re);
   expect(reimportDelta).toBeLessThan(1e-6);
   const hRe = await hash(page);
-  await page.getByTestId('brush-draw').click();
+  await tap(page, 'brush-draw');
   await stroke(page, [0, 0.0, 1.0], [0.2, 0.0, 0.98]);
   expect(await hash(page)).not.toBe(hRe);
   const objF = await saveDownload(page, 'act-export-obj', 'scene.obj');
@@ -141,22 +141,23 @@ test('bad files fail loudly without damaging the scene', async ({ page }) => {
 test('native project: hierarchy, transforms, mask and geometry survive save/open', async ({ page }) => {
   await boot(page);
   await stroke(page, [0, 0.3, 0.95], [0.3, 0.3, 0.9]);
-  await page.getByTestId('brush-mask').click();
+  await tap(page, 'brush-mask');
   await stroke(page, [0, -0.3, 0.95], [0.2, -0.3, 0.93]);
   const h = await hash(page);
   const sphereId = await page.evaluate(() => (window as any).__FORM.doc.selected);
-  await page.getByTestId('add-group').click();
+  await tap(page, 'add-group');
   const groupId = await page.evaluate(() => (window as any).__FORM.doc.selected);
-  await page.locator(`#tree li[data-id="${sphereId}"]`).click();
+  await drawer(page, 'scene'); await page.locator(`#tree li[data-id="${sphereId}"]`).click();
   await page.getByTestId('i-parent').selectOption(groupId);
   await page.locator('[data-xf=position][data-a=x]').fill('0.75'); await page.locator('[data-xf=position][data-a=x]').dispatchEvent('change');
+  await closeDrawer(page);
   const file = await saveDownload(page, 'act-save', 'sample.formengine');
-  await page.getByTestId('file-menu').click(); await page.getByTestId('act-new').click();
+  await tap(page, 'act-new');
   expect(await hash(page)).not.toBe(h);
   await page.getByTestId('file-open').setInputFiles(file);
   await expect(page.locator('#status')).toContainText('Opened');
   const st = await page.evaluate(([sid, gid]) => { const F = (window as any).__FORM; const n = F.doc.nodes.get(sid); const s = F.doc.sculptOf(n); let masked = 0; for (const v of s.mesh.mask) if (v > 0.5) masked++; return { parentIsGroup: n.obj.parent === F.doc.nodes.get(gid).obj, x: n.obj.position.x, masked, nodes: F.doc.nodes.size }; }, [sphereId, groupId]);
-  await page.locator(`#tree li[data-id="${sphereId}"]`).click();
+  await drawer(page, 'scene'); await page.locator(`#tree li[data-id="${sphereId}"]`).click();
   expect(await hash(page)).toBe(h);
   expect(st.parentIsGroup).toBe(true); expect(st.x).toBeCloseTo(0.75, 6); expect(st.masked).toBeGreaterThan(10);
   record('project', { bytes: fs.statSync(file).size, ...st, hashPreserved: true });
@@ -167,7 +168,7 @@ test('IndexedDB autosave recovers after reload, and falls back when the newest s
   await page.evaluate(() => (window as any).__FORM.autosaveClear());
   await stroke(page, [0, 0.3, 0.95], [0.3, 0.3, 0.9]);
   await page.evaluate(() => (window as any).__FORM.autosaveNow()); const hA = await hash(page);
-  await page.getByTestId('brush-inflate').click();
+  await tap(page, 'brush-inflate');
   await stroke(page, [0, -0.3, 0.95], [0.3, -0.3, 0.9]);
   await page.evaluate(() => (window as any).__FORM.autosaveNow()); const hB = await hash(page);
   await boot(page, '');
@@ -184,10 +185,12 @@ test('IndexedDB autosave recovers after reload, and falls back when the newest s
 
 test('transform edits are undoable', async ({ page }) => {
   await boot(page);
-  await page.getByTestId('mode-translate').click();
+  await tap(page, 'mode-translate');
+  await expect(page.getByTestId('mode-done')).toBeVisible();
+  await drawer(page, 'scene');
   const inp = page.locator('[data-xf=scale][data-a=y]'); await inp.fill('2'); await inp.dispatchEvent('change');
   expect(await page.evaluate(() => (window as any).__FORM.doc.selectedNode.obj.scale.y)).toBe(2);
-  await page.getByTestId('undo').click();
+  await tap(page, 'undo');
   expect(await page.evaluate(() => (window as any).__FORM.doc.selectedNode.obj.scale.y)).toBe(1);
 });
 
@@ -218,6 +221,13 @@ test('SIMULATED pen pressure scales displacement; SIMULATED touch strokes; secon
   }, { type, pointerType, pressure, pts, id });
   const pts: { x: number; y: number }[] = [];
   for (let i = 0; i <= 10; i++) pts.push(await page.evaluate(i => (window as any).__FORM.screenOf(-0.2 + i * 0.04, 0.3, 0.93), i));
+  // fingers first: before any pen is seen, a finger sculpts (tablets without a stylus)
+  const t0 = await hash(page);
+  await fire('stroke', 'touch', 0.5, pts, 20); const t1 = await hash(page);
+  expect(t1).not.toBe(t0);
+  await fire('twofinger', 'touch', 0.5, [pts[0], pts[3], pts[8]], 30);
+  expect(await hash(page)).toBe(t1);
+  await page.getByTestId('act-new').evaluate(el => (el as HTMLElement).click());
   const p0 = await positions(page);
   await fire('stroke', 'pen', 0.2, pts); const p1 = await positions(page);
   await page.getByTestId('act-new').evaluate(el => (el as HTMLElement).click());
@@ -225,10 +235,5 @@ test('SIMULATED pen pressure scales displacement; SIMULATED touch strokes; secon
   await fire('stroke', 'pen', 1.0, pts); const q1 = await positions(page);
   const light = maxDelta(p0, p1), heavy = maxDelta(q0, q1);
   expect(light).toBeGreaterThan(1e-4); expect(heavy).toBeGreaterThan(light * 2);
-  const t0 = await hash(page);
-  await fire('stroke', 'touch', 0.5, pts, 20); const t1 = await hash(page);
-  expect(t1).not.toBe(t0);
-  await fire('twofinger', 'touch', 0.5, [pts[0], pts[3], pts[8]], 30);
-  expect(await hash(page)).toBe(t1);
   record('inputSimulated', { note: 'SIMULATED via synthetic PointerEvents in headless Chromium; no physical pen/touch hardware', penLowPressureDelta: light, penFullPressureDelta: heavy, touchStroke: true, twoFingerCancels: true });
 });

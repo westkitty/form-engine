@@ -3,79 +3,79 @@
     "webgl2": true,
     "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)"
   },
-  "_updated": "2026-10-22T02:14:59.843Z",
+  "_updated": "2026-10-22T04:25:38.385Z",
   "brushes": {
     "draw": {
       "changed": true,
-      "maxDelta": 0.06085203743453432,
-      "hash": "de42d1c0"
+      "maxDelta": 0.06455308714188354,
+      "hash": "69679693"
     },
     "inflate": {
       "changed": true,
-      "maxDelta": 0.04576268665881385,
-      "hash": "63d0c8db"
+      "maxDelta": 0.04933808574963273,
+      "hash": "edf29329"
     },
     "clay": {
       "changed": true,
-      "maxDelta": 0.03431457132408677,
-      "hash": "c18772da"
+      "maxDelta": 0.03728815027156196,
+      "hash": "a0da3cf1"
     },
     "smooth": {
       "changed": true,
-      "maxDelta": 0.04013563472798848,
-      "hash": "63fb8d95"
+      "maxDelta": 0.0370816097866551,
+      "hash": "b8e4224b"
     },
     "grab": {
       "changed": true,
-      "maxDelta": 0.07116295621154066,
-      "hash": "b0448741"
+      "maxDelta": 0.0711579389786236,
+      "hash": "83ac56da"
     },
     "flatten": {
       "changed": true,
-      "maxDelta": 0.03551300878253716,
-      "hash": "f3f37006"
+      "maxDelta": 0.0326837601833467,
+      "hash": "1b24915f"
     },
     "pinch": {
       "changed": true,
-      "maxDelta": 0.06169481965825306,
-      "hash": "0eb9e343"
+      "maxDelta": 0.06616138661301962,
+      "hash": "c878cd02"
     },
     "crease": {
       "changed": true,
-      "maxDelta": 0.04955848379509982,
-      "hash": "9399eb40"
+      "maxDelta": 0.05324584947642849,
+      "hash": "47d8f804"
     }
   },
   "symmetryMask": {
-    "mirrorDisplacementDiff": 2.3485283030810766e-8,
+    "mirrorDisplacementDiff": 7.332244236768481e-8,
     "maskedVertexMove": 0
   },
   "transactions": {
     "h0": "7b95dcb5",
-    "h1": "85809f3e",
-    "h2": "54e55c21",
+    "h1": "9dc9616b",
+    "h2": "d85268d3",
     "cancelExact": true,
     "undoRedoExact": true
   },
   "roundtrip": {
-    "deformFromSphere": 0.08419901916387589,
-    "glbBytes": 1180804,
+    "deformFromSphere": 0.07618446369892325,
+    "glbBytes": 1180800,
     "exportedVsInApp": 0,
     "reimportVsInApp": 0,
     "objVsInApp": 0,
     "stlTriangles": 98304,
     "stlWeld": {
-      "verts": 25430,
+      "verts": 25355,
       "render": 294912,
-      "distinctPositionsInFile": 25447
+      "distinctPositionsInFile": 25357
     },
     "reimportedEditable": true
   },
   "project": {
-    "bytes": 483652,
+    "bytes": 482396,
     "parentIsGroup": true,
     "x": 0.75,
-    "masked": 387,
+    "masked": 354,
     "nodes": 2,
     "hashPreserved": true
   },
@@ -94,13 +94,13 @@
     "overlayShown": true,
     "restored": true,
     "geometryIntact": true,
-    "centreLuma": 126.546875,
+    "centreLuma": 126.579375,
     "sculptAfterRestore": true
   },
   "inputSimulated": {
     "note": "SIMULATED via synthetic PointerEvents in headless Chromium; no physical pen/touch hardware",
-    "penLowPressureDelta": 0.013459128037811734,
-    "penFullPressureDelta": 0.06684867535868495,
+    "penLowPressureDelta": 0.012130953785695611,
+    "penFullPressureDelta": 0.06032285937918077,
     "touchStroke": true,
     "twoFingerCancels": true
   },
@@ -129,7 +129,7 @@
       "ready",
       "progress"
     ],
-    "vertexDeltaAfterSculpt": 0.06866111925655381,
+    "vertexDeltaAfterSculpt": 0.06345978519081162,
     "exportVsInApp": 0
   },
   "layout_1440x900": {
@@ -179,5 +179,175 @@
     "topOverlap": false,
     "segRight": 284,
     "railVisible": true
+  },
+  "tablet_pen": {
+    "simulated": "CDP Input.dispatchMouseEvent pointerType=pen",
+    "lightDelta": 0.008285244463774632,
+    "heavyDelta": 0.05503941289068421,
+    "uprightVerts": 794,
+    "tiltedVerts": 1499,
+    "tiltRadiusScale": 1.563512819357337,
+    "twistRead": 90
+  },
+  "tablet_hover": {
+    "cursor": true,
+    "hovering": true,
+    "seen": true
+  },
+  "tablet_palm": {
+    "rejectedTouches": 1,
+    "orbitAfterPenAway": 8.812920725934788,
+    "sculptByFinger": false
+  },
+  "tablet_sidebutton": {
+    "invertRadialSum": -11.58919525010658,
+    "normalRadialSum": 11.205282317810967,
+    "smoothSetting": true
+  },
+  "tablet_eraser": {
+    "masked": 574,
+    "tool": "mask"
+  },
+  "tablet_twofinger": {
+    "sculpted": false,
+    "cameraMoved": 7.291200752363797
+  },
+  "tablet_lock": {
+    "touchAction": "none",
+    "bodyTouch": "auto",
+    "overscroll": "none",
+    "ctxPrevented": true,
+    "dpr": 2,
+    "pr": 1.5297066189313362,
+    "buf": [
+      2263,
+      1413
+    ],
+    "sharpPixelRatio": 2
+  },
+  "fullscreen": {
+    "toggle": true,
+    "autoOnFirstTouch": true,
+    "note": "headless Chromium Fullscreen API"
+  },
+  "installButton": {
+    "simulatedEvent": true,
+    "promptCalled": true
+  },
+  "layout_2960x1848@1": {
+    "canvas": [
+      2960,
+      1848
+    ],
+    "docW": 2960,
+    "winW": 2960,
+    "dock": [
+      977,
+      1764,
+      1983,
+      1834
+    ],
+    "dockInView": true,
+    "dockHitsCorner": false,
+    "small": [],
+    "clipped": [],
+    "visiblePanels": 0,
+    "dockAreaShare": 0.012874069026412777
+  },
+  "layout_1480x924@2": {
+    "canvas": [
+      1480,
+      924
+    ],
+    "docW": 1480,
+    "winW": 1480,
+    "dock": [
+      237,
+      840,
+      1243,
+      910
+    ],
+    "dockInView": true,
+    "dockHitsCorner": false,
+    "small": [],
+    "clipped": [],
+    "visiblePanels": 0,
+    "dockAreaShare": 0.051496276105651106
+  },
+  "layout_390x844@1": {
+    "canvas": [
+      390,
+      844
+    ],
+    "docW": 390,
+    "winW": 390,
+    "dock": [
+      12,
+      639,
+      378,
+      830
+    ],
+    "dockInView": true,
+    "dockHitsCorner": false,
+    "small": [],
+    "clipped": [],
+    "visiblePanels": 0,
+    "dockAreaShare": 0.2121511005286183
+  },
+  "layout_768x1024@1": {
+    "canvas": [
+      768,
+      1024
+    ],
+    "docW": 768,
+    "winW": 768,
+    "dock": [
+      12,
+      878,
+      756,
+      1010
+    ],
+    "dockInView": true,
+    "dockHitsCorner": false,
+    "small": [],
+    "clipped": [],
+    "visiblePanels": 0,
+    "dockAreaShare": 0.1248779296875
+  },
+  "pwa": {
+    "manifestUrl": "http://127.0.0.1:5182/manifest.webmanifest",
+    "installabilityErrors": [],
+    "appId": "http://127.0.0.1:5182/",
+    "display": "fullscreen",
+    "display_override": [
+      "fullscreen",
+      "standalone"
+    ],
+    "swControlled": true,
+    "offlineBoot": {
+      "ready": "1",
+      "canvas": true,
+      "networkBlocked": true
+    }
+  },
+  "layout_1024x768@1": {
+    "canvas": [
+      1024,
+      768
+    ],
+    "docW": 1024,
+    "winW": 1024,
+    "dock": [
+      65,
+      684,
+      959,
+      754
+    ],
+    "dockInView": true,
+    "dockHitsCorner": false,
+    "small": [],
+    "clipped": [],
+    "visiblePanels": 0,
+    "dockAreaShare": 0.07957736651102702
   }
 }
