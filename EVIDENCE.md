@@ -7,7 +7,7 @@ Environment: Debian 13 cloud VM (box), 8 vCPU, 15 GB RAM, **no GPU**. Node 20.19
 | `npx tsc --noEmit` | clean |
 | `npm test` (Vitest 4.1.12) | **35/35 passed** (5 files: core 19, project 4, recon 6, artifacts 2, tablet 4) |
 | `npx playwright test` (fresh production build + `vite preview`, so the service worker and manifest are the shipped ones) | **29/29 passed** (sculpt 11, tablet 8, responsive 5, pwa 2, imagelab 2, bench 1) |
-| Live, after deploy: `FORM_E2E_BASE=https://westkitty.github.io/form-engine/ npx playwright test` (all but bench) | see "Live verification" below |
+| Live, after deploy of `16f0c81`: `FORM_E2E_BASE=https://westkitty.github.io/form-engine/ npx playwright test e2e/{sculpt,imagelab,responsive,tablet,pwa}.spec.ts` | **28/28 passed** against the live site (all but bench) |
 | `node tools/meshy-proxy.mjs` route guards (fake key, no upstream call) | OPTIONS 204 · unknown route 404 · foreign asset host 400 · CORS origin pinned |
 
 The detailed per-test numbers are in `artifacts/evidence/e2e-results.json`, written by the most recent run.
@@ -41,6 +41,15 @@ Not provable here:
 - Real-GPU frame rate on the Adreno 740
 
  run.
+
+## Live verification (2026-10-22, about 00:30 ET)
+
+- Actions run 39722524551: build ✓, deploy ✓.
+- `https://westkitty.github.io/form-engine/` returns 200. The new assets `assets/index-DKpk-yHJ.js` (application/javascript) and `assets/index-dA29-t0L.css` (text/css) return 200; 0.1.0 shipped `index-NqqIslh5.js` and `index-CGYYA6OS.css`.
+- `sw.js` (version `0.2.0-32d79fad7297`), `manifest.webmanifest` (application/manifest+json), the icons and the screenshots all return 200.
+- Live Chrome installability check: `Page.getInstallabilityErrors` → [] with app id `https://westkitty.github.io/form-engine/`. Offline reload boots from the service worker.
+- The live run includes the sculpt → GLB export → independent parse → re-import → still-editable journey.
+- `artifacts/evidence/e2e-results.json` holds the numbers from this live run.
 
 ## Key measured facts
 
