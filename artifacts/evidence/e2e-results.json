@@ -3,79 +3,79 @@
     "webgl2": true,
     "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)"
   },
-  "_updated": "2026-10-22T02:08:52.155Z",
+  "_updated": "2026-10-22T02:14:59.843Z",
   "brushes": {
     "draw": {
       "changed": true,
-      "maxDelta": 0.06077724982799736,
-      "hash": "bcb2c5fe"
+      "maxDelta": 0.06085203743453432,
+      "hash": "de42d1c0"
     },
     "inflate": {
       "changed": true,
-      "maxDelta": 0.04636005504620358,
-      "hash": "17707a46"
+      "maxDelta": 0.04576268665881385,
+      "hash": "63d0c8db"
     },
     "clay": {
       "changed": true,
-      "maxDelta": 0.03467265873491116,
-      "hash": "5797ad44"
+      "maxDelta": 0.03431457132408677,
+      "hash": "c18772da"
     },
     "smooth": {
       "changed": true,
-      "maxDelta": 0.04046171425467667,
-      "hash": "44fc3165"
+      "maxDelta": 0.04013563472798848,
+      "hash": "63fb8d95"
     },
     "grab": {
       "changed": true,
-      "maxDelta": 0.09603032509286342,
-      "hash": "ef651a78"
+      "maxDelta": 0.07116295621154066,
+      "hash": "b0448741"
     },
     "flatten": {
       "changed": true,
-      "maxDelta": 0.03645923256609835,
-      "hash": "0bc9687a"
+      "maxDelta": 0.03551300878253716,
+      "hash": "f3f37006"
     },
     "pinch": {
       "changed": true,
-      "maxDelta": 0.062421837951278515,
-      "hash": "38d2ae80"
+      "maxDelta": 0.06169481965825306,
+      "hash": "0eb9e343"
     },
     "crease": {
       "changed": true,
-      "maxDelta": 0.05019612927421571,
-      "hash": "8d19f607"
+      "maxDelta": 0.04955848379509982,
+      "hash": "9399eb40"
     }
   },
   "symmetryMask": {
-    "mirrorDisplacementDiff": 8.894239775236734e-9,
+    "mirrorDisplacementDiff": 2.3485283030810766e-8,
     "maskedVertexMove": 0
   },
   "transactions": {
     "h0": "7b95dcb5",
-    "h1": "0dfb00cd",
-    "h2": "2b86fad4",
+    "h1": "85809f3e",
+    "h2": "54e55c21",
     "cancelExact": true,
     "undoRedoExact": true
   },
   "roundtrip": {
-    "deformFromSphere": 0.08568118150557126,
-    "glbBytes": 1180800,
+    "deformFromSphere": 0.08419901916387589,
+    "glbBytes": 1180804,
     "exportedVsInApp": 0,
     "reimportVsInApp": 0,
     "objVsInApp": 0,
     "stlTriangles": 98304,
     "stlWeld": {
-      "verts": 25420,
+      "verts": 25430,
       "render": 294912,
-      "distinctPositionsInFile": 25425
+      "distinctPositionsInFile": 25447
     },
     "reimportedEditable": true
   },
   "project": {
-    "bytes": 483735,
+    "bytes": 483652,
     "parentIsGroup": true,
     "x": 0.75,
-    "masked": 372,
+    "masked": 387,
     "nodes": 2,
     "hashPreserved": true
   },
@@ -94,13 +94,13 @@
     "overlayShown": true,
     "restored": true,
     "geometryIntact": true,
-    "centreLuma": 155.82,
+    "centreLuma": 126.546875,
     "sculptAfterRestore": true
   },
   "inputSimulated": {
     "note": "SIMULATED via synthetic PointerEvents in headless Chromium; no physical pen/touch hardware",
-    "penLowPressureDelta": 0.013581472239827443,
-    "penFullPressureDelta": 0.06737681016880297,
+    "penLowPressureDelta": 0.013459128037811734,
+    "penFullPressureDelta": 0.06684867535868495,
     "touchStroke": true,
     "twoFingerCancels": true
   },
@@ -129,7 +129,7 @@
       "ready",
       "progress"
     ],
-    "vertexDeltaAfterSculpt": 0.07056332470948946,
+    "vertexDeltaAfterSculpt": 0.06866111925655381,
     "exportVsInApp": 0
   },
   "layout_1440x900": {

@@ -328,9 +328,9 @@ renderRail(); renderBrushSettings(); renderHistoryButtons();
     await new Promise<void>(r => { let k = 0; const f = () => { if (++k >= frames) r(); else requestAnimationFrame(f); }; requestAnimationFrame(f); });
     vp.continuous = false;
     const frame = { rafP50: vp.frameInterval.pct(0.5), rafP95: vp.frameInterval.pct(0.95), cpuP50: vp.frameCpu.pct(0.5), cpuP95: vp.frameCpu.pct(0.95) };
-    // GPU-inclusive timing: render + gl.finish
-    const gl = vp.renderer.getContext(); const fin: number[] = [];
-    for (let i = 0; i < 20; i++) { const a = performance.now(); vp.renderer.render(vp.scene, vp.camera); gl.finish(); fin.push(performance.now() - a); }
+    // GPU-inclusive timing: render + 1px readPixels (forces the pipeline to complete; gl.finish() does not block in Chromium)
+    const gl = vp.renderer.getContext(); const fin: number[] = []; const px = new Uint8Array(4);
+    for (let i = 0; i < 20; i++) { const a = performance.now(); vp.renderer.render(vp.scene, vp.camera); gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px); fin.push(performance.now() - a); }
     fin.sort((a, b) => a - b);
     const dabs: number[] = []; const refits: number[] = [];
     st.engine.begin('draw');

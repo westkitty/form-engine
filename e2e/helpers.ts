@@ -9,7 +9,7 @@ export async function boot(page: Page, query = 'fresh=1') {
   const errors: string[] = [];
   page.on('pageerror', e => errors.push('pageerror: ' + e.message));
   page.on('console', m => { if (m.type() === 'error') errors.push('console.error: ' + m.text()); });
-  await page.goto('/?' + query);
+  await page.goto('./?' + query);
   await page.waitForSelector('body[data-ready="1"]', { timeout: 30_000 });
   await page.waitForTimeout(300);
   return errors;

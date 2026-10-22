@@ -11,6 +11,6 @@ test('benchmark 10k / 100k / 500k triangles (headless Chromium, SwiftShader)', a
     console.log(JSON.stringify(r));
     out.push(r);
   }
-  const env = { date: new Date().toISOString(), ua: await page.evaluate(() => navigator.userAgent), hw: await page.evaluate(() => navigator.hardwareConcurrency), viewport: '1440x900 @1x', note: 'Software rasteriser (SwiftShader via ANGLE/Vulkan) on a cloud VM without a GPU. rAF interval is capped by the headless compositor; renderFinish = render()+gl.finish() is the GPU-inclusive cost.' };
+  const env = { date: new Date().toISOString(), ua: await page.evaluate(() => navigator.userAgent), hw: await page.evaluate(() => navigator.hardwareConcurrency), viewport: '1440x900 @1x', note: 'Software rasteriser (SwiftShader via ANGLE/Vulkan) on a cloud VM without a GPU. rAF interval is capped by the headless compositor; renderSync = render()+1px readPixels is the GPU-inclusive (rasterisation-complete) cost. performance.now() resolution is ~0.1 ms (no cross-origin isolation).' };
   fs.writeFileSync(`${EVID}/bench.json`, JSON.stringify({ env, results: out }, null, 2));
 });
