@@ -47,7 +47,7 @@ Not provable here:
 - Actions run 39722524551: build ✓, deploy ✓.
 - `https://westkitty.github.io/form-engine/` returns 200. The new assets `assets/index-DKpk-yHJ.js` (application/javascript) and `assets/index-dA29-t0L.css` (text/css) return 200; 0.1.0 shipped `index-NqqIslh5.js` and `index-CGYYA6OS.css`.
 - `sw.js` (version `0.2.0-32d79fad7297`), `manifest.webmanifest` (application/manifest+json), the icons and the screenshots all return 200.
-- Live Chrome installability check: `Page.getInstallabilityErrors` → [] with app id `https://westkitty.github.io/form-engine/`. Offline reload boots from the service worker.
+- Live Chrome installability check: `Page.getInstallabilityErrors` → []; manifest `id` "form-engine" gives the app id `https://westkitty.github.io/form-engine` (a bare "./" resolved to the origin root, so it was changed before the final deploy). Offline reload boots from the service worker.
 - The live run includes the sculpt → GLB export → independent parse → re-import → still-editable journey.
 - `artifacts/evidence/e2e-results.json` holds the numbers from this live run.
 

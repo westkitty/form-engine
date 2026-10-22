@@ -3,7 +3,7 @@
     "webgl2": true,
     "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)"
   },
-  "_updated": "2026-10-22T04:30:11.275Z",
+  "_updated": "2026-10-22T04:33:46.044Z",
   "brushes": {
     "draw": {
       "changed": true,
@@ -315,9 +315,9 @@
     "dockAreaShare": 0.1248779296875
   },
   "pwa": {
-    "manifestUrl": "https://westkitty.github.io/form-engine/manifest.webmanifest",
+    "manifestUrl": "http://127.0.0.1:5182/manifest.webmanifest",
     "installabilityErrors": [],
-    "appId": "https://westkitty.github.io/",
+    "appId": "http://127.0.0.1:5182/form-engine",
     "display": "fullscreen",
     "display_override": [
       "fullscreen",

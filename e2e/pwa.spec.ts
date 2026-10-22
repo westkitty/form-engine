@@ -28,7 +28,7 @@ test('manifest + service worker: Chrome reports the app installable, and it open
   expect(m.display).toBe('fullscreen');
   expect(m.display_override).toEqual(['fullscreen', 'standalone']);
   expect(m.orientation).toBe('any');
-  expect(m.start_url).toBe('./'); expect(m.scope).toBe('./'); expect(m.id).toBe('./');
+  expect(m.start_url).toBe('./'); expect(m.scope).toBe('./'); expect(m.id).toBe('form-engine'); // resolves against the origin → <origin>/form-engine, unique per site
   const maskable = m.icons.filter((i: any) => i.purpose === 'maskable').map((i: any) => i.sizes).sort();
   expect(maskable).toEqual(['192x192', '512x512']);
   expect(m.screenshots.map((s: any) => s.form_factor).sort()).toEqual(['narrow', 'wide']);
