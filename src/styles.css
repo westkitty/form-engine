@@ -148,6 +148,7 @@ input[type=number], input[type=text], input[type=password], input[type=url], sel
   .brand .b1:last-child { display: none; }
   .seg button { padding: 5px 6px; font-size: 11px; }
   .tb { padding: 5px 6px; }
+  .seg button { font-size: 0; padding: 5px 7px; } .seg button::after { content: attr(data-short); font: 10.5px var(--mono); letter-spacing: .04em; }
   [data-act="imagelab"] { font-size: 0; } [data-act="imagelab"]::after { content: "Lab"; font-size: 12px; }
   .hud { font-size: 9.5px; }
 }

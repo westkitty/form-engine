@@ -42,7 +42,7 @@ export class Viewport {
     this.rendererInfo = dbg ? String(gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL)) : String(gl.getParameter(gl.RENDERER));
 
     this.camera = new THREE.PerspectiveCamera(38, 1, 0.01, 500);
-    this.camera.position.set(0.0, 0.35, 4.2);
+    this.camera.position.set(0.0, 1.1, 4.0);
     this.controls = new OrbitControls(this.camera, cv);
     this.controls.enableDamping = true; this.controls.dampingFactor = 0.18;
     this.controls.mouseButtons = { LEFT: THREE.MOUSE.ROTATE, MIDDLE: THREE.MOUSE.PAN, RIGHT: THREE.MOUSE.ROTATE };
@@ -60,8 +60,8 @@ export class Viewport {
     const key = new THREE.DirectionalLight(0xffffff, 1.6); key.position.set(-3, 4, 5); this.scene.add(key);
 
     // floor grid: hairline graphite, fades with distance via fog
-    const gridHelper = new THREE.GridHelper(20, 40, 0x3a3d42, 0x24262a);
-    (gridHelper.material as THREE.Material).transparent = true; (gridHelper.material as THREE.LineBasicMaterial).opacity = 0.7;
+    const gridHelper = new THREE.GridHelper(12, 24, 0x34373c, 0x222428);
+    (gridHelper.material as THREE.Material).transparent = true; (gridHelper.material as THREE.LineBasicMaterial).opacity = 0.45;
     gridHelper.position.y = -1.25; this.grid = gridHelper; this.scene.add(gridHelper);
     this.scene.fog = new THREE.Fog(0x111214, 8, 22);
 

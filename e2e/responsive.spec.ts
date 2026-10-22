@@ -11,11 +11,13 @@ for (const [w, h] of VIEWS) {
       const cv = r('#viewport canvas'); const seg = r('#modes'); const rail = r('#rail');
       const tops = [...document.querySelectorAll('.topbar > *')].map(e => e.getBoundingClientRect()).filter(b => b.width > 0);
       let overlap = false; for (let i = 0; i < tops.length; i++) for (let j = i + 1; j < tops.length; j++) { const a = tops[i], b = tops[j]; if (a.left < b.right - 1 && b.left < a.right - 1 && a.top < b.bottom - 1 && b.top < a.bottom - 1) overlap = true; }
-      return { canvas: [Math.round(cv.width), Math.round(cv.height)], docW: document.documentElement.scrollWidth, winW: innerWidth, topOverlap: overlap, segRight: seg.right, railVisible: rail.width > 0 && rail.height > 0 };
+      const clipped = [...document.querySelectorAll('.topbar > *, .seg button')].filter(e => (e as HTMLElement).scrollWidth > (e as HTMLElement).clientWidth + 1).map(e => (e as HTMLElement).className || e.tagName);
+      return { clipped, canvas: [Math.round(cv.width), Math.round(cv.height)], docW: document.documentElement.scrollWidth, winW: innerWidth, topOverlap: overlap, segRight: seg.right, railVisible: rail.width > 0 && rail.height > 0 };
     });
     expect(m.canvas[0]).toBeGreaterThan(200); expect(m.canvas[1]).toBeGreaterThan(200);
     expect(m.docW).toBeLessThanOrEqual(m.winW);
     expect(m.topOverlap).toBe(false);
+    expect(m.clipped).toEqual([]);
     expect(m.segRight).toBeLessThanOrEqual(w);
     expect(m.railVisible).toBe(true);
     await page.getByTestId('brush-clay').click();

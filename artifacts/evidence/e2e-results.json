@@ -3,7 +3,7 @@
     "webgl2": true,
     "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)"
   },
-  "_updated": "2026-10-22T01:42:24.837Z",
+  "_updated": "2026-10-22T02:08:52.155Z",
   "brushes": {
     "draw": {
       "changed": true,
@@ -133,6 +133,7 @@
     "exportVsInApp": 0
   },
   "layout_1440x900": {
+    "clipped": [],
     "canvas": [
       1076,
       856
@@ -144,6 +145,7 @@
     "railVisible": true
   },
   "layout_1024x768": {
+    "clipped": [],
     "canvas": [
       706,
       724
@@ -155,6 +157,7 @@
     "railVisible": true
   },
   "layout_768x1024": {
+    "clipped": [],
     "canvas": [
       768,
       922
@@ -166,6 +169,7 @@
     "railVisible": true
   },
   "layout_390x844": {
+    "clipped": [],
     "canvas": [
       390,
       742
